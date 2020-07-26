@@ -10,135 +10,151 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let employeeArr = [];
+
+function anotherEmployee(){
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Do you want to add another employee?",
+                name: "addEmployee",
+                choices: ["Yes", "No"],
+            },
+        ])
+        .then(e => {
+            if(e.addEmployee === "Yes"){
+                addEmployee();
+            }else{
+                writeHTML();
+            };
+        });
+};
+
+function addEmployee(){
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Do you want to add an Intern or Engineer?",
+                name: "intOrEng",
+                choices: ["Intern", "Engineer"],
+            },
+        ])
+        .then(e => {
+            if(e.intOrEng === "Intern"){
+                addIntern();
+            }else{
+                addEngi();
+            };
+        });
+};
+
+function addIntern(){
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the name of your intern?",
+                name: "intName",
+            },
+            {
+                type: "input",
+                message: "What is the id of your intern?",
+                name: "intId",
+            },
+            {
+                type: "input",
+                message: "What is the email of your intern?",
+                name: "intEmail",
+            },
+            {
+                type: "input",
+                message: "What is the name of your intern's school?",
+                name: "intSchool",
+            },
+        ])
+        .then(e => {
+            let newInt = new Intern(e.intName, e.intId, e.intEmail, e.intSchool);
+            employeeArr.push(newInt);
+            anotherEmployee();
+        });
+};
+
+function addEngi(){
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the name of your engineer?",
+                name: "engiName",
+            },
+            {
+                type: "input",
+                message: "What is the id of your engineer?",
+                name: "engiId",
+            },
+            {
+                type: "input",
+                message: "What is the email of your engineer?",
+                name: "engiEmail",
+            },
+            {
+                type: "input",
+                message: "What is the Github username of your engineer?",
+                name: "engiGit",
+            },
+        ])
+        .then(e => {
+            let newEngi = new Engineer(e.engiName, e.engiId, e.engiEmail, e.engiGit);
+            employeeArr.push(newEngi);
+            anotherEmployee();
+        });
+};
+
+function addMana(){
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the name of your manager?",
+                name: "manaName",
+            },
+            {
+                type: "input",
+                message: `What is the id of your manager?`,
+                name: "manaId",
+            },
+            {
+                type: "input",
+                message: "What is the email of your manager?",
+                name: "manaEmail",
+            },
+            {
+                type: "number",
+                message: "What is the office number of your manager?",
+                name: "manaOffice",
+            },
+        ])
+        .then(e => {
+            let manager = new Manager(e.manaName, e.manaId, e.manaEmail, e.manaOffice);
+            employeeArr.push(manager);
+            anotherEmployee();
+        });
+};
+
+function writeHTML(){
+    let employeeHTML = render(employeeArr);
+
+    fs.writeFile(outputPath, employeeHTML, (err) => {
+        if (err) throw err;
+    });
+};
+
+addMana();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-
-inquirer
-    .prompt([
-        //Manager
-        {
-            type: "input",
-            message: "What is the name of your manager?",
-            name: "manaName",
-        },
-        {
-            type: "input",
-            message: `What is the id of your manager?`,
-            name: "manaId",
-        },
-        {
-            type: "input",
-            message: "What is the email of your manager?",
-            name: "manaEmail",
-        },
-        {
-            type: "number",
-            message: "What is the office number of your manager?",
-            name: "manaOffice",
-        },
-        //Engineer 1
-        {
-            type: "input",
-            message: "What is the name of your first engineer?",
-            name: "engiNameOne",
-        },
-        {
-            type: "input",
-            message: "What is the id of your first engineer?",
-            name: "engiIdOne",
-        },
-        {
-            type: "input",
-            message: "What is the email of your first engineer?",
-            name: "engiEmailOne",
-        },
-        {
-            type: "input",
-            message: "What is the Github username of your first engineer?",
-            name: "engiGitOne",
-        },
-        //Engineer 2
-        {
-            type: "input",
-            message: "What is the name of your second engineer?",
-            name: "engiNameTwo",
-        },
-        {
-            type: "input",
-            message: "What is the id of your second engineer?",
-            name: "engiIdTwo",
-        },
-        {
-            type: "input",
-            message: "What is the email of your second engineer?",
-            name: "engiEmailTwo",
-        },
-        {
-            type: "input",
-            message: "What is the Github username of your second engineer?",
-            name: "engiGitTwo",
-        },
-        //Engineer 3
-        {
-            type: "input",
-            message: "What is the name of your third engineer?",
-            name: "engiNameThree",
-        },
-        {
-            type: "input",
-            message: "What is the id of your third engineer?",
-            name: "engiIdThree",
-        },
-        {
-            type: "input",
-            message: "What is the email of your third engineer?",
-            name: "engiEmailThree",
-        },
-        {
-            type: "input",
-            message: "What is the Github username of your third engineer?",
-            name: "engiGitThree",
-        },
-        //Intern
-        {
-            type: "input",
-            message: "What is the name of your intern?",
-            name: "intName",
-        },
-        {
-            type: "input",
-            message: "What is the id of your intern?",
-            name: "intId",
-        },
-        {
-            type: "input",
-            message: "What is the email of your intern?",
-            name: "intEmail",
-        },
-        {
-            type: "input",
-            message: "What is the name of your intern's school?",
-            name: "intSchool",
-        },
-    ])
-    .then(e => {
-        let manager = new Manager(e.manaName, e.manaId, e.manaEmail, e.manaOffice);
-        let engiOne = new Engineer(e.engiNameOne, e.engiIdOne, e.engiEmailOne, e.engiGitOne);
-        let engiTwo = new Engineer(e.engiNameTwo, e.engiIdTwo, e.engiEmailTwo, e.engiGitTwo);
-        let engiThree = new Engineer(e.engiNameThree, e.engiIdThree, e.engiEmailThree, e.engiGitThree);
-        let intern = new Intern(e.intName, e.intId, e.intEmail, e.intSchool);
-
-        let employeeArr = [manager, engiOne, engiTwo, engiThree, intern];
-
-        let employeeHTML = render(employeeArr);
-
-        fs.writeFile(outputPath, employeeHTML, (err) => {
-            if (err) throw err;
-        });
-
-    });
-
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
